@@ -24,12 +24,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: code test
-          args: --severity-threshold=medium --sarif-file-output=snyk.sarif
-      
-      - name: Subir resultados a GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: snyk.sarif
+          args: --severity-threshold=medium
   snyk-sca:
     name: Software Composition Analysis con Snyk
     needs: snyk-sast
@@ -44,9 +39,4 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: test
-          args: --severity-threshold=medium --sarif-file-output=snyk.sarif
-      
-      - name: Subir resultados a GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: snyk.sarif
+          args: --severity-threshold=medium
