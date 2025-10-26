@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   snyk-sast:
+    name: Static Application Security Testing con Snyk
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -18,17 +19,20 @@ jobs:
       - uses: actions/checkout@v4
       - name: SAST Snyk Code
         uses: snyk/actions/node@master
+        continue-on-error: true # Asegurarse que continue a SCA
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: code test
-          args: --severity-threshold=medium
+          args: --severity-threshold=medium --sarif-file-output=snyk.sarif
       
       - name: Subir resultados a GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: snyk.sarif
   snyk-sca:
+    name: Software Composition Analysis con Snyk
+    needs: snyk-sast
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -40,7 +44,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: test
-          args: --severity-threshold=medium
+          args: --severity-threshold=medium --sarif-file-output=snyk.sarif
       
       - name: Subir resultados a GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v3
