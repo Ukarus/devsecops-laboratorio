@@ -54,7 +54,7 @@ jobs:
           docker build -t reddit-clone:latest .
   snyk-imagescan:
     name: Image Security con Snyk
-    needs: snyk-sast
+    needs: docker-build
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -65,5 +65,5 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          command: container test
+          command: container test reddit-clone:latest
           args: --severity-threshold=medium
