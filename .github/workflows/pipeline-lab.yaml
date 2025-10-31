@@ -50,8 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build Docker Image
-        run: |
-          docker build -t reddit-clone:latest .
+        run: docker build -t reddit-clone:latest .
   snyk-imagescan:
     name: Image Security con Snyk
     needs: docker-build
@@ -60,10 +59,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: SCA Snyk
+      - name: Snyk Container test
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: container test reddit-clone:latest
-          args: --severity-threshold=medium
+          args: --severity-threshold=medium --file=Dockerfile
